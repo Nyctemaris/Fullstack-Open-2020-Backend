@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 var morgan = require('morgan')
+const { request, json } = require('express')
 
 let persons = [
     {
@@ -27,6 +28,9 @@ let persons = [
     },
 ]
 
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
+
+
 // HTTP GET operations
 app.get('/', (request, response) => {
     response.send('<h1>Requests need to made to /api/desiredResource</h1>')
@@ -34,6 +38,7 @@ app.get('/', (request, response) => {
 
 app.get('/api/persons', (request, response) => {
     response.json(persons)
+    morgan.token('data', function(request, response) {return request.params})
 })
 
 app.get('/api/persons/:id', (request, response) => {
