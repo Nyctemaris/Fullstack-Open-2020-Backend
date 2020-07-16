@@ -59,25 +59,21 @@ app.use(express.json())
 //...
 
 const generateId = () => {
-    const maxId = persons.length > 0
-      ? Math.max(...persons.map(n => n.id))
-      : 0
-    return maxId + 1
+    return Math.floor(Math.random() * Math.floor(100000));
   }
   
   app.post('/api/persons', (request, response) => {
     const body = request.body
   
-    if (!body.content) {
-      return response.status(400).json({ 
-        error: 'content missing' 
-      })
+    if (!body.name) {
+        return response.status(400).json({ error: 'name missing from request' }) 
+    } else if (!body.number) {
+        return response.status(400).json({ error: 'number missing from request' }) 
     }
   
     const person = {
-      content: body.content,
-      important: body.important || false,
-      date: new Date(),
+      name: body.name,
+      number: body.number,
       id: generateId(),
     }
   
