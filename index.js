@@ -1,7 +1,9 @@
 const express = require('express')
-const app = express()
 var morgan = require('morgan')
-const { request, json } = require('express')
+var bodyParser = require('body-parser')
+var morganBody = require('morgan-body')
+
+const app = express()
 
 let persons = [
     {
@@ -28,7 +30,8 @@ let persons = [
     },
 ]
 
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
+app.use(bodyParser.json());
+morganBody(app);
 
 
 // HTTP GET operations
@@ -38,7 +41,6 @@ app.get('/', (request, response) => {
 
 app.get('/api/persons', (request, response) => {
     response.json(persons)
-    morgan.token('data', function(request, response) {return request.params})
 })
 
 app.get('/api/persons/:id', (request, response) => {
