@@ -1,36 +1,94 @@
 const express = require('express')
 const app = express()
 
-let notes = [
+let persons = [
     {
-      id: 1,
-      content: "HTML is easy",
-      date: "2020-01-10T17:30:31.098Z",
-      important: true
+        name: "Arto Hellas",
+        number: "040-1249899",
+        id: 1
     },
     {
-      id: 2,
-      content: "Browser can execute only Javascript",
-      date: "2020-01-10T18:39:34.091Z",
-      important: false
+        name: "Janne Mikkonen",
+        number: "040-13453899",
+        id: 2
+    },    {
+        name: "Veikko Helminen",
+        number: "045-58588558",
+        id: 3
+    },    {
+        name: "Liina Kuusisto",
+        number: "040-34223434",
+        id: 4
+    },    {
+        name: "Aino Helminen",
+        number: "040-34534553",
+        id: 5
     },
-    {
-      id: 3,
-      content: "GET and POST are the most important methods of HTTP protocol",
-      date: "2020-01-10T19:20:14.298Z",
-      important: true
+]
+
+// HTTP GET operations
+app.get('/', (request, response) => {
+    response.send('<h1>Requests need to made to /api/desiredResource</h1>')
+})
+
+app.get('/api/persons', (request, response) => {
+    response.json(persons)
+})
+
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(person => person.id === id)
+    if (person) {
+        response.json(person)
+    } else {
+        response.status(404).end()
     }
-  ]
-
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
 })
 
-app.get('/api/notes', (req, res) => {
-  res.json(notes)
-})
+
+// HTTP POST operations
+app.use(express.json()) 
+
+//...
+
+const generateId = () => {
+    const maxId = persons.length > 0
+      ? Math.max(...persons.map(n => n.id))
+      : 0
+    return maxId + 1
+  }
+  
+  app.post('/api/persons', (request, response) => {
+    const body = request.body
+  
+    if (!body.content) {
+      return response.status(400).json({ 
+        error: 'content missing' 
+      })
+    }
+  
+    const person = {
+      content: body.content,
+      important: body.important || false,
+      date: new Date(),
+      id: generateId(),
+    }
+  
+    persons = persons.concat(person)
+  
+    response.json(person)
+  })
+
+
+// HTTP Delete operations
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    persons = persons.filter(person => person.id !== id)
+  
+    response.status(204).end()
+  })
 
 const PORT = 3001
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+    console.log(`Server running on port ${PORT}`)
 })
