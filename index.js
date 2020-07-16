@@ -61,14 +61,17 @@ app.use(express.json())
 const generateId = () => {
     return Math.floor(Math.random() * Math.floor(100000));
   }
-  
+
   app.post('/api/persons', (request, response) => {
     const body = request.body
-  
+    const duplicatePerson = (persons.find(person => person.name === body.name));
+
     if (!body.name) {
         return response.status(400).json({ error: 'name missing from request' }) 
     } else if (!body.number) {
         return response.status(400).json({ error: 'number missing from request' }) 
+    } else if (duplicatePerson) {
+        return response.status(400).json({ error: 'name already exists in database'})
     }
   
     const person = {
