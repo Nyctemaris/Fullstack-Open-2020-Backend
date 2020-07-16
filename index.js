@@ -11,15 +11,15 @@ let persons = [
         name: "Janne Mikkonen",
         number: "040-13453899",
         id: 2
-    },    {
+    }, {
         name: "Veikko Helminen",
         number: "045-58588558",
         id: 3
-    },    {
+    }, {
         name: "Liina Kuusisto",
         number: "040-34223434",
         id: 4
-    },    {
+    }, {
         name: "Aino Helminen",
         number: "040-34534553",
         id: 5
@@ -47,43 +47,43 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.get('/info', (request, response) => {
     const personCount = persons.length
-    const message = 
-    `<p>Phonebook has info for ${personCount} people<p>` + 
-    `<p>${new Date()}</p>`;
+    const message =
+        `<p>Phonebook has info for ${personCount} people<p>` +
+        `<p>${new Date()}</p>`;
     response.send(message)
 })
 
 // HTTP POST operations
-app.use(express.json()) 
+app.use(express.json())
 
 //...
 
 const generateId = () => {
     return Math.floor(Math.random() * Math.floor(100000));
-  }
+}
 
-  app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response) => {
     const body = request.body
     const duplicatePerson = (persons.find(person => person.name === body.name));
 
     if (!body.name) {
-        return response.status(400).json({ error: 'name missing from request' }) 
+        return response.status(400).json({ error: 'name missing from request' })
     } else if (!body.number) {
-        return response.status(400).json({ error: 'number missing from request' }) 
+        return response.status(400).json({ error: 'number missing from request' })
     } else if (duplicatePerson) {
-        return response.status(400).json({ error: 'name already exists in database'})
+        return response.status(400).json({ error: 'name already exists in database' })
     }
-  
+
     const person = {
-      name: body.name,
-      number: body.number,
-      id: generateId(),
+        name: body.name,
+        number: body.number,
+        id: generateId(),
     }
-  
+
     persons = persons.concat(person)
-  
+
     response.json(person)
-  })
+})
 
 
 // HTTP Delete operations
@@ -99,9 +99,13 @@ app.delete('/api/persons/:id', (request, response) => {
     } else {
         response.status(204).end()
     }
-  })
+})
 
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
 
+app.use(unknownEndpoint)
 
 // Port settings and listening
 
