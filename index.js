@@ -30,6 +30,7 @@ let persons = [
     },
 ]
 
+// initialize bodyParser and hook morganBody to app for logging in server console
 app.use(bodyParser.json());
 morganBody(app);
 
