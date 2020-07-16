@@ -45,6 +45,13 @@ app.get('/api/persons/:id', (request, response) => {
     }
 })
 
+app.get('/info', (request, response) => {
+    const personCount = persons.length
+    const message = 
+    `<p>Phonebook has info for ${personCount} people<p>` + 
+    `<p>${new Date()}</p>`;
+    response.send(message)
+})
 
 // HTTP POST operations
 app.use(express.json()) 
