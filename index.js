@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 var morgan = require('morgan')
 var bodyParser = require('body-parser')
 var morganBody = require('morgan-body')
@@ -29,6 +30,8 @@ let persons = [
         id: 5
     },
 ]
+// initialize CORS
+app.use(cors())
 
 // initialize bodyParser and hook morganBody to app for logging in server console
 app.use(bodyParser.json());
