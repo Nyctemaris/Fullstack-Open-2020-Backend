@@ -90,10 +90,21 @@ const generateId = () => {
 // HTTP Delete operations
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
+    const tempLength = persons.length
+
     persons = persons.filter(person => person.id !== id)
-  
-    response.status(204).end()
+
+    // Check if someone was really removed and send proper response. Needs refactoring later on.
+    if (tempLength === persons.length) {
+        response.status(404).end()
+    } else {
+        response.status(204).end()
+    }
   })
+
+
+
+// Port settings and listening
 
 const PORT = 3001
 app.listen(PORT, () => {
