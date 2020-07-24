@@ -37,6 +37,8 @@ app.use(cors())
 app.use(bodyParser.json());
 morganBody(app);
 
+// check if requested resource exists in folder called build
+app.use(express.static('build'))
 
 // HTTP GET operations
 app.get('/', (request, response) => {
